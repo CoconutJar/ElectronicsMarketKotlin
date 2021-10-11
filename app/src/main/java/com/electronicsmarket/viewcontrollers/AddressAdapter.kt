@@ -12,7 +12,9 @@ import com.electronicsmarket.R
 import com.electronicsmarket.data.Address
 import com.electronicsmarket.data.AddressListHelper
 
-
+/**
+ * Adapter for Address activity's recyclerview
+ */
 class AddressAdapter (private val editAddress: (Address) -> (Unit), private val refresh: () -> (Unit),
     private val addressList: List<Address>
 ): ListAdapter<Address, AddressAdapter.ItemViewHolder>(RecyclerViewDiffCallbackAddress) {
@@ -24,8 +26,8 @@ class AddressAdapter (private val editAddress: (Address) -> (Unit), private val 
         val addressItemPhoneNumber: TextView = view.findViewById(R.id.phone_number_view)
         val addressItemDefault: TextView = view.findViewById(R.id.default_address_view)
 
-        val addressEditButton: ImageButton = view.findViewById(R.id.edit_address_button)
-        val addressDeleteButton: ImageButton = view.findViewById(R.id.delete_address_button)
+        private val addressEditButton: ImageButton = view.findViewById(R.id.edit_address_button)
+        private val addressDeleteButton: ImageButton = view.findViewById(R.id.delete_address_button)
 
 
         init{
@@ -66,6 +68,7 @@ class AddressAdapter (private val editAddress: (Address) -> (Unit), private val 
         return AddressAdapter.ItemViewHolder(editAddress, refresh, adapterLayout)
     }
 
+    //Bind data to UI
     override fun onBindViewHolder(holder: AddressAdapter.ItemViewHolder, position: Int) {
         val item = addressList[position]
 
