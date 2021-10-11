@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Electronics Market</string>
+
+<!--    Main activity-->
+    <string name="name_label_text">Name</string>
+    <string name="category_label_text">Category</string>
+    <string name="price_label_text">Price</string>
+    <string name="condition_label_text">Condition</string>
+    <string name="load_more_button_text">Load more</string>
+
+<!--    Detail activity-->
+    <string name="product_image_content_description">Product Image</string>
+    <string name="add_to_cart">Add to cart</string>
+    <string name="back_to_list">Back to item list</string>
+
+</resources>
