@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <Button
+    <ImageButton
         android:id="@+id/delete_address_button"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <ImageButton
         android:id="@+id/edit_address_button"
         android:layout_width="40dp"
         android:layout_height="40dp"

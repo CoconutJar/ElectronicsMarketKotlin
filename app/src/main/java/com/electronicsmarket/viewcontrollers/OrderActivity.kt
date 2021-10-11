@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.electronicsmarket.R
 import com.electronicsmarket.data.AddressListHelper
 import com.electronicsmarket.data.CartItem
+import com.electronicsmarket.data.ShoppingCart
 
 /**
  * The view controller for Order Page, contains the logic for setting the UI elements and updating them
@@ -18,8 +19,8 @@ class OrderActivity : AppCompatActivity() {
 
     private lateinit var recyclerViewer: RecyclerView
     private lateinit var totalCostView: TextView
-    private var totalCost: Double = 0.00;
-    private var orderList: List<CartItem> = mutableListOf()
+    private var totalCost: Float = 0.0F;
+    private var orderList: ArrayList<CartItem> = ArrayList<CartItem>()
     private lateinit var defaultAddress: TextView
     private lateinit var defaultName: TextView
     private lateinit var defaultPhoneNumber:TextView
@@ -49,15 +50,21 @@ class OrderActivity : AppCompatActivity() {
         }
 
         // Set up the total cost TextView
-        orderList = intent.getSerializableExtra("OrderList") as ArrayList<CartItem>
+        val fullList = ShoppingCart.getShoppingCart().getProducts()
+
+        for(item in fullList){
+            if(item.selected)
+                orderList.add(item)
+        }
+
         for(item in orderList){
             totalCost += item.product.price * item.quantity
         }
         totalCostView = findViewById(R.id.order_total_view)
-        totalCostView.text = totalCost.toString()
+        totalCostView.text = String.format("%.2f", totalCost)
 
         // Set up the adapter and submit the orders for display
-        val orderAdapter = OrderAdapter({ Long, Int -> refresh(Long, Int) }, orderList)
+        val orderAdapter = OrderAdapter({ refresh() }, orderList)
         recyclerViewer = findViewById<RecyclerView>(R.id.recyclerViewOrder)
         recyclerViewer.layoutManager = GridLayoutManager(this, 1)
         recyclerViewer.adapter = orderAdapter
@@ -65,14 +72,20 @@ class OrderActivity : AppCompatActivity() {
     }
 
     /** Updates RecyclerView with new data */
-    private fun refresh(id:Long, quantity: Int){
+    private fun refresh(){
+        orderList.clear()
+        val fullList = ShoppingCart.getShoppingCart().getProducts()
+        for(item in fullList){
+            if(item.selected)
+                orderList.add(item)
+        }
+        totalCost = 0.0F;
         for(item in orderList){
-            if(item.product.id == id){
-                item.quantity += quantity
-                totalCost += item.product.price * quantity
-                totalCostView.text = totalCost.toString()
+            if(item.selected) {
+                totalCost += item.product.price.times(item.quantity)
             }
         }
+        totalCostView.text = String.format("%.2f", totalCost)
         recyclerViewer.adapter?.notifyDataSetChanged()
     }
 

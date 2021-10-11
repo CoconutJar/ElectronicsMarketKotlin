@@ -1,10 +1,9 @@
 package com.electronicsmarket.viewcontrollers
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -25,8 +24,8 @@ class AddressAdapter (private val editAddress: (Address) -> (Unit), private val 
         val addressItemPhoneNumber: TextView = view.findViewById(R.id.phone_number_view)
         val addressItemDefault: TextView = view.findViewById(R.id.default_address_view)
 
-        val addressEditButton: Button = view.findViewById(R.id.edit_address_button)
-        val addressDeleteButton: Button = view.findViewById(R.id.delete_address_button)
+        val addressEditButton: ImageButton = view.findViewById(R.id.edit_address_button)
+        val addressDeleteButton: ImageButton = view.findViewById(R.id.delete_address_button)
 
 
         init{

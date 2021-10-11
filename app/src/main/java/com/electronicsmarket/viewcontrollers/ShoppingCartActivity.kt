@@ -19,7 +19,6 @@ class ShoppingCartActivity : AppCompatActivity() {
     private var orderArrayList: ArrayList<CartItem> = ArrayList<CartItem>()
     private lateinit var recyclerViewer: RecyclerView
     private lateinit var totalCostView: TextView
-    private var totalCost: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,15 +32,15 @@ class ShoppingCartActivity : AppCompatActivity() {
         }
 
         val shoppingList = ShoppingCart.getShoppingCart().getProducts()
-        for ((id, count) in shoppingList) {
-            val product = ShoppingCart.getShoppingCart().getProductForId(id)
+        for (item in shoppingList) {
+            val product = item.product
             if (product != null) {
-                val newItem = CartItem(product, count)h
+                val newItem = CartItem(product, item.quantity, item.selected)
                 cart.add(newItem)
             }
         }
 
-        val cartAdapter = CartAdapter({ refresh() }, { cost -> addTotalPrice(cost) }, { id, quantity -> addToOrder(id, quantity)}, cart)
+        val cartAdapter = CartAdapter({ refresh() }, cart)
         totalCostView = findViewById(R.id.cart_total)
         recyclerViewer = findViewById<RecyclerView>(R.id.recycler_cart_view)
         recyclerViewer.layoutManager = GridLayoutManager(this, 1)
@@ -71,35 +70,6 @@ class ShoppingCartActivity : AppCompatActivity() {
         resetTotal()
     }
 
-    private fun addTotalPrice(cost: Double){
-
-        totalCost += cost
-        totalCostView.text = totalCost.toString()
-        refresh()
-    }
-
-    private fun addToOrder(id: Long, quantity: Int){
-        val product = ShoppingCart.getShoppingCart().getProductForId(id)
-
-//        if(product!= null) {
-//            val orderItem: CartItem = CartItem(product, quantity)
-//            var exists: Boolean = false
-//            for (item in orderArrayList){
-//                if(item.product == orderItem.product){
-//                    exists = true
-//                    item.quantity += quantity
-//                    if(item.quantity <= 0 ) {
-//                        orderArrayList.remove(item)
-//                    }
-//                    break
-//                }
-//            }
-//            if(!exists && quantity > 0){
-//                orderArrayList.add(orderItem)
-//            }
-//        }
-    }
-
     /** Updates Default Address with new data */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -112,15 +82,16 @@ class ShoppingCartActivity : AppCompatActivity() {
         }
     }
 
+    /** Updates TotalCost with new data */
     private fun resetTotal(){
         var total:Float = 0.0F
         val shoppingList = ShoppingCart.getShoppingCart().getProducts()
-        for ((id, count) in shoppingList) {
-            val product = ShoppingCart.getShoppingCart().getProductForId(id)
-            if (product != null) {
-                total += product.price.times(count)
+        for (item in shoppingList) {
+            val product = item.product
+            if (product != null && item.selected) {
+                total += product.price.times(item.quantity)
             }
         }
-        totalCostView.text = total.toString()
+        totalCostView.text = String.format("%.2f", total)
     }
 }

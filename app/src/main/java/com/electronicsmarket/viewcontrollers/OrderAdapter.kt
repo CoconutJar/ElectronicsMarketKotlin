@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
@@ -14,11 +15,11 @@ import com.electronicsmarket.data.CartItem
 import com.electronicsmarket.data.ShoppingCart
 
 
-class OrderAdapter( private val refresh: (Long, Int) -> (Unit),
-    private val cartMap: List<CartItem>
+class OrderAdapter( private val refresh: () -> (Unit),
+    private val cartMap: ArrayList<CartItem>
 ): ListAdapter<CartItem, OrderAdapter.ItemViewHolder>(RecyclerViewDiffCallbackTwo) {
 
-    class ItemViewHolder(private val refresh: (Long, Int) -> (Unit), private val view: View) : RecyclerView.ViewHolder(view) {
+    class ItemViewHolder(private val refresh: () -> (Unit), private val view: View) : RecyclerView.ViewHolder(view) {
         // Connect variables to UI elements.
         var orderItemId: Long = 0
         val orderItemName: TextView = view.findViewById(R.id.order_product_name)
@@ -26,21 +27,21 @@ class OrderAdapter( private val refresh: (Long, Int) -> (Unit),
         val orderItemQuantity: TextView = view.findViewById(R.id.order_product_quantity)
         val orderItemImage: ImageView = view.findViewById(R.id.orderImageView)
 
-        val cart = ShoppingCart.getShoppingCart()
+        private val cart = ShoppingCart.getShoppingCart()
 
-        private val increaseButton: Button = view.findViewById(R.id.increase_quant_button)
-        private val decreaseButton: Button = view.findViewById(R.id.decrease_quant_button)
+        private val increaseButton: ImageButton = view.findViewById(R.id.increase_quant_button)
+        private val decreaseButton: ImageButton = view.findViewById(R.id.decrease_quant_button)
 
         init {
             increaseButton.setOnClickListener {
-                cart.addProduct(orderItemId)
+                cart.getProductForId(orderItemId)?.let { it1 -> cart.addProduct(it1) }
 
-                refresh(orderItemId, 1)
+                refresh()
             }
             decreaseButton.setOnClickListener {
-                cart.removeProduct(orderItemId)
+                cart.getProductForId(orderItemId)?.let { it1 -> cart.removeProduct(it1) }
 
-                refresh(orderItemId, -1)
+                refresh()
             }
 
         }
@@ -63,6 +64,7 @@ class OrderAdapter( private val refresh: (Long, Int) -> (Unit),
      * Replace the contents of a view (invoked by the layout manager)
      */
     override fun onBindViewHolder(holder: OrderAdapter.ItemViewHolder, position: Int) {
+
         val item = cartMap[position]
 
         holder.orderItemId = item.product.id

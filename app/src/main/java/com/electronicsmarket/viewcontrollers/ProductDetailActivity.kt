@@ -54,7 +54,7 @@ class ProductDetailActivity : AppCompatActivity() {
             addToCartButton.setOnClickListener {
                 if (currentProduct != null) {
                     val cart = ShoppingCart.getShoppingCart()
-                    cart.addProduct(currentProduct.id)
+                    cart.getProductForId(currentProduct.id)?.let { it1 -> cart.addProduct(it1) }
                     Toast.makeText(this, cart.printCart(), Toast.LENGTH_SHORT).show()
                 }
             }

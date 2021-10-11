@@ -64,13 +64,14 @@
         app:layout_constraintStart_toEndOf="@+id/item_image"
         app:layout_constraintTop_toBottomOf="@+id/cart_item_condition" />
 
-    <Button
+    <ImageButton
         android:id="@+id/decrease_quantity"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        app:srcCompat="@drawable/minus_image"
+        android:scaleType="fitCenter"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginTop="74dp"
         android:layout_marginEnd="5dp"
-        android:text="-"
         app:layout_constraintEnd_toStartOf="@+id/item_quantity"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -84,13 +85,14 @@
         app:layout_constraintEnd_toStartOf="@+id/increase_quantity"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <ImageButton
         android:id="@+id/increase_quantity"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        app:srcCompat="@drawable/plus_image"
+        android:scaleType="fitCenter"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginTop="74dp"
         android:layout_marginEnd="16dp"
-        android:text="+"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

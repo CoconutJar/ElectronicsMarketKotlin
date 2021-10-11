@@ -3,10 +3,7 @@ package com.electronicsmarket.viewcontrollers
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -19,13 +16,11 @@ import com.electronicsmarket.data.ShoppingCart
  */
 class CartAdapter(
     private val refresh: () -> (Unit),
-    private val updateTotalCost: (Double) -> (Unit),
-    private val addToOrder: (Long, Int) -> (Unit),
-        private val cartMap: List<CartItem>
+    private val cartMap: List<CartItem>
 ): ListAdapter<CartItem, CartAdapter.ItemViewHolder>(RecyclerViewDiffCallbackTwo) {
 
 
-    class ItemViewHolder(private val refresh: () -> (Unit), private val updateTotalCost: (Double) -> (Unit), private val addToOrder: (Long, Int) -> (Unit), private val view: View) : RecyclerView.ViewHolder(view) {
+    class ItemViewHolder(private val refresh: () -> (Unit), private val view: View) : RecyclerView.ViewHolder(view) {
         // Connect variables to UI elements.
         var cartItemId: Long = 0
         val cartItemCheckBox: CheckBox = view.findViewById(R.id.checkBox)
@@ -36,39 +31,23 @@ class CartAdapter(
         val cartItemQuantity: TextView = view.findViewById(R.id.item_quantity)
         val cartItemImage: ImageView = view.findViewById(R.id.item_image)
 
-        val increaseButton: Button = view.findViewById(R.id.increase_quantity)
-        val decreaseButton: Button = view.findViewById(R.id.decrease_quantity)
+        private val increaseButton: ImageButton = view.findViewById(R.id.increase_quantity)
+        private val decreaseButton: ImageButton = view.findViewById(R.id.decrease_quantity)
 
         init {
             val cart = ShoppingCart.getShoppingCart()
             increaseButton.setOnClickListener {
-                cart.addProduct(cartItemId)
-                if(cartItemCheckBox.isChecked){
-                    println("here")
-                    updateTotalCost(cartItemPrice.text.toString().toDouble())
-                    println("added 1 to order")
-                    addToOrder(cartItemId, 1)
-                }
+                cart.getProductForId(cartItemId)?.let { it1 -> cart.addProduct(it1) }
                 refresh()
 
             }
             decreaseButton.setOnClickListener {
-                cart.removeProduct(cartItemId)
-                if(cartItemCheckBox.isChecked && cartItemQuantity.text.toString().toInt() > 0){
-                    updateTotalCost(0.0- (cartItemPrice.text.toString().toDouble()))
-                    addToOrder(cartItemId, -1)
-                }
+                cart.getProductForId(cartItemId)?.let { it1 -> cart.removeProduct(it1) }
                 refresh()
             }
             cartItemCheckBox.setOnClickListener {
-                if(cartItemCheckBox.isChecked){
-                    updateTotalCost(cartItemPrice.text.toString().toDouble().times(cartItemQuantity.text.toString().toDouble()))
-                    addToOrder(cartItemId, cartItemQuantity.text.toString().toInt())
-                }
-                else{
-                    updateTotalCost(0.0- (cartItemPrice.text.toString().toDouble().times(cartItemQuantity.text.toString().toDouble() )))
-                    addToOrder(cartItemId, 0-cartItemQuantity.text.toString().toInt())
-                }
+                cart.getProductForId(cartItemId)?.let { it1 -> cart.orderProduct(it1,cartItemCheckBox.isChecked) }
+                refresh()
             }
         }
 
@@ -84,7 +63,7 @@ class CartAdapter(
         val adapterLayout = LayoutInflater.from(parent.context)
             .inflate(R.layout.cart_item_view, parent, false)
 
-        return ItemViewHolder(refresh, updateTotalCost, addToOrder, adapterLayout)
+        return ItemViewHolder(refresh, adapterLayout)
     }
 
     /**
@@ -100,6 +79,7 @@ class CartAdapter(
         holder.cartItemPrice.text = item.product.price.toString()
         holder.cartItemCategory.text = item.product.category.toString()
         holder.cartItemQuantity.text = item.quantity.toString()
+        holder.cartItemCheckBox.isChecked = item.selected
         holder.cartItemImage.setImageResource(item.product.images!![0])
 
     }
