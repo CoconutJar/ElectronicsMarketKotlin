@@ -57,6 +57,7 @@ class OrderActivity : AppCompatActivity() {
                 orderList.add(item)
         }
 
+        // Get the current totalcost of what is being ordered
         for(item in orderList){
             totalCost += item.product.price * item.quantity
         }
@@ -105,10 +106,5 @@ class OrderActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        recyclerViewer.adapter?.notifyDataSetChanged()
     }
 }

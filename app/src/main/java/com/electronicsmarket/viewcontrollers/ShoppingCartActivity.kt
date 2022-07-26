@@ -12,7 +12,9 @@ import com.electronicsmarket.data.AddressListHelper
 import com.electronicsmarket.data.CartItem
 import com.electronicsmarket.data.ShoppingCart
 
-
+/**
+ * The view controller for Shopping Cart Page, contains the logic for setting the UI elements
+ */
 class ShoppingCartActivity : AppCompatActivity() {
 
     private val cart = mutableListOf<CartItem>()

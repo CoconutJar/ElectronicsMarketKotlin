@@ -61,8 +61,6 @@ class AddEditAddressActivity : AppCompatActivity() {
                     !editPhoneField.text.toString().equals("") &&
                     !editPostalAddressField.text.toString().equals("")){
 
-                println(editNameField.text.toString() + "Name "+ editPhoneField.text.toString() + "Phone " + editPostalAddressField.text.toString())
-
                 // Remove other default address if this address is the new default
                 if(setDefault.isChecked){
                     addressListHelper.removeDefaultAddress()

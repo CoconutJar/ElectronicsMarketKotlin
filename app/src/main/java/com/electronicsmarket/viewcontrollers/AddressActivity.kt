@@ -11,7 +11,9 @@ import com.electronicsmarket.R
 import com.electronicsmarket.data.Address
 import com.electronicsmarket.data.AddressListHelper
 
-
+/**
+ * The view controller for Address Page, contains the logic for setting the UI elements and updating them
+ */
 class AddressActivity: AppCompatActivity() {
 
     private lateinit var recyclerViewer: RecyclerView
@@ -26,11 +28,13 @@ class AddressActivity: AppCompatActivity() {
         addressListHelper = AddressListHelper.getAddressListHelp()
         list.addAll(addressListHelper.getList())
 
+        // Set up Adapter and the recyclerViewer
         val addressAdapter = AddressAdapter({ address -> editAddress(address)},{refresh()}, list)
         recyclerViewer.layoutManager = GridLayoutManager(this, 1)
         recyclerViewer.adapter = addressAdapter
         addressAdapter.submitList(list)
 
+        // Address button
         val addAddressButton: Button = findViewById(R.id.add_address_button)
         addAddressButton.setOnClickListener{
             val addAddressIntent = Intent(this, AddEditAddressActivity()::class.java)
@@ -39,7 +43,8 @@ class AddressActivity: AppCompatActivity() {
         }
     }
 
-    fun refresh(){
+    /** Updates RecyclerView with new data */
+    private fun refresh(){
         list.clear()
         list.addAll(addressListHelper.getList())
         recyclerViewer.adapter?.notifyDataSetChanged()

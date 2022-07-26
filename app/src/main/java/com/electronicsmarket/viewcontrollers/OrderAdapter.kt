@@ -14,7 +14,9 @@ import com.electronicsmarket.R
 import com.electronicsmarket.data.CartItem
 import com.electronicsmarket.data.ShoppingCart
 
-
+/**
+ * Adapter for Order activity's recyclerview
+ */
 class OrderAdapter( private val refresh: () -> (Unit),
     private val cartMap: ArrayList<CartItem>
 ): ListAdapter<CartItem, OrderAdapter.ItemViewHolder>(RecyclerViewDiffCallbackTwo) {
@@ -35,12 +37,10 @@ class OrderAdapter( private val refresh: () -> (Unit),
         init {
             increaseButton.setOnClickListener {
                 cart.getProductForId(orderItemId)?.let { it1 -> cart.addProduct(it1) }
-
                 refresh()
             }
             decreaseButton.setOnClickListener {
                 cart.getProductForId(orderItemId)?.let { it1 -> cart.removeProduct(it1) }
-
                 refresh()
             }
 
